@@ -275,6 +275,7 @@ unRegister的移除保存的subscriber、subscriberMethod已经Subscription取�
 在借鉴eventbus消息处理的模式上，新加入code判断方式，这样可以更加快速的添加sub对象，不用一个消息初始化一个类，而且可以同时区分一个消息的不同处理方式
 
 **效果**
+
 ![这里写图片描述](https://github.com/wzgiceman/Rxbus/blob/master/gif/rxbus_code.gif)
 
 **发送消息**
