@@ -8,9 +8,9 @@
 
 ##项目成果
 #### 结果
-![这里写图片描述](http://img.blog.csdn.net/20160929120017605)
+![这里写图片描述](https://github.com/wzgiceman/Rxbus/blob/master/gif/rxbus-change-text.gif)
 ####工程目录
-![这里写图片描述](http://img.blog.csdn.net/20160929134632585)
+![这里写图片描述](https://github.com/wzgiceman/Rxbus/blob/master/gif/6506adc6-d765-406e-be7f-76e56649979b.png)
 #### 代码使用
 *  注册-注销-接受事件
 ```java
@@ -275,7 +275,7 @@ unRegister的移除保存的subscriber、subscriberMethod已经Subscription取�
 在借鉴eventbus消息处理的模式上，新加入code判断方式，这样可以更加快速的添加sub对象，不用一个消息初始化一个类，而且可以同时区分一个消息的不同处理方式
 
 **效果**
-![这里写图片描述](http://img.blog.csdn.net/20160929134218808)
+![这里写图片描述](https://github.com/wzgiceman/Rxbus/blob/master/gif/rxbus_code.gif)
 
 **发送消息**
 ```java
@@ -345,7 +345,7 @@ unRegister的移除保存的subscriber、subscriberMethod已经Subscription取�
 
 ##导入
 推荐手动导入到自己的工程中，避免多余的第三方jar包导入，只要你的工程中有对rx的支出，将文件copy到工程下面即可：
-![这里写图片描述](http://img.blog.csdn.net/20160929134632585)
+![这里写图片描述](https://github.com/wzgiceman/Rxbus/blob/master/gif/6506adc6-d765-406e-be7f-76e56649979b.png)
 
 **rx资源地址**
 ```java
