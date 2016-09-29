@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/activity_main"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    >
+
+    <TextView
+        android:id="@+id/tv_change"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorAccent"
+        android:textSize="22sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Hello World!"/>
+
+    <LinearLayout
+        android:layout_below="@id/tv_change"
+        android:layout_width="match_parent"
+        android:layout_marginTop="40dp"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_height="wrap_content">
+
+    <Button
+        android:id="@+id/btn_change_text"
+        android:layout_width="wrap_content"
+        android:background="@color/colorPrimary"
+        android:text="發送消息"
+        android:textColor="#ffffff"
+        android:padding="10dp"
+        android:textSize="18sp"
+        android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btn_code_simple"
+            android:layout_width="wrap_content"
+            android:background="@color/colorPrimary"
+            android:text="code"
+            android:layout_marginLeft="4dp"
+            android:textColor="#ffffff"
+            android:padding="10dp"
+            android:textSize="18sp"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btn_code_diffrent"
+            android:layout_width="wrap_content"
+            android:background="@color/colorPrimary"
+            android:text="code-ox"
+            android:layout_marginLeft="4dp"
+            android:textColor="#ffffff"
+            android:padding="10dp"
+            android:textSize="18sp"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+</RelativeLayout>
