@@ -212,12 +212,21 @@ public class RxBus {
             observable = toObservable(subscriberMethod.eventType);
         } else {
             observable = toObservable(subscriberMethod.code, subscriberMethod.eventType);
-        }
-
-        Subscription subscription = postToObservable(observable, subscriberMethod)
-                .subscribe(new Action1<Object>() {
+        }    
+       Subscription subscription = postToObservable(observable, subscriberMethod)
+                .subscribe(new Subscriber() {
                     @Override
-                    public void call(Object o) {
+                    public void onCompleted() {
+                        
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("tag","error--->"+e.toString());
+                    }
+
+                    @Override
+                    public void onNext(Object o) {
                         callEvent(subscriberMethod.code, o);
                     }
                 });
