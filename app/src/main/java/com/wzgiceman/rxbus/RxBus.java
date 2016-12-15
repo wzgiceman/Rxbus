@@ -1,5 +1,7 @@
-package com.wzgiceman.rx;
+package com.wzgiceman.rxbus;
 
+
+import android.util.Log;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -9,9 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 import rx.Observable;
+import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;

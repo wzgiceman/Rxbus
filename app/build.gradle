@@ -1,15 +1,15 @@
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "24.0.2"
+    buildToolsVersion "23.0.2"
     defaultConfig {
-        applicationId "com.wzgiceman.rxbus"
-        minSdkVersion 17
+        minSdkVersion 14
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+       /* testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"*/
     }
     buildTypes {
         release {
@@ -17,11 +17,26 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        // 指定用 Java8 编译
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    productFlavors {
+        rxbus1 {
+            applicationId "com.wzgiceman.rxbus1"
+        }
+
+        rxbus1 {
+            applicationId "com.wzgiceman.rxbus2"
+        }
+    }
 }
 
 dependencies {
     /*rx-android-java*/
-    compile 'io.reactivex:rxjava:+'
     compile 'com.squareup.retrofit:adapter-rxjava:+'
     compile 'com.trello:rxlifecycle:+'
     compile 'com.trello:rxlifecycle-components:+'

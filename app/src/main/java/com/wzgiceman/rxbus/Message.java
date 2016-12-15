@@ -1,4 +1,4 @@
-package com.wzgiceman.rx;
+package com.wzgiceman.rxbus;
 
 /**
  * @author wzg 2016/9/21
