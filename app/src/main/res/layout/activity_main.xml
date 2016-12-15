@@ -58,4 +58,19 @@
             android:layout_height="wrap_content"/>
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_sticky"
+        android:layout_width="wrap_content"
+        android:background="@color/colorPrimary"
+        android:text="发送sticky消息"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="180dp"
+        android:layout_marginLeft="4dp"
+        android:textColor="#ffffff"
+        android:padding="10dp"
+        android:textSize="18sp"
+        android:layout_height="wrap_content"/>
+
+
 </RelativeLayout>

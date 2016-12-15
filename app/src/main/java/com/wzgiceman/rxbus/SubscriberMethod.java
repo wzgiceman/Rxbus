@@ -13,7 +13,7 @@ public class SubscriberMethod {
     public Class<?> eventType;
     public Object subscriber;
     public int code;
-    private boolean sticky;
+    public boolean sticky;
 
     public SubscriberMethod(Object subscriber, Method method, Class<?> eventType, int code,ThreadMode threadMode,boolean sticky ) {
         this.method = method;

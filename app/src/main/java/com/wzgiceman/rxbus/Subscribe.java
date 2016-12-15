@@ -16,5 +16,5 @@ import java.lang.annotation.Target;
 public @interface Subscribe {
     int code() default -1;
     ThreadMode threadMode() default ThreadMode.CURRENT_THREAD;
-    boolean sticky() default true;
+    boolean sticky() default false;
 }

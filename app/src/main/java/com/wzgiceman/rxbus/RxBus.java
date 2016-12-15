@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -35,6 +36,9 @@ public class RxBus {
 
 
     private Map<Class, List<SubscriberMethod>> subscriberMethodByEventType = new HashMap<>();
+
+    /*stick数据*/
+    private final Map<Class<?>, Object> stickyEvent =new ConcurrentHashMap<>();
 
     // 主题
     private final Subject bus;
@@ -65,8 +69,12 @@ public class RxBus {
      * @param o 事件数据
      */
     public void post(Object o) {
+        synchronized (stickyEvent) {
+            stickyEvent.put(o.getClass(), o);
+        }
         bus.onNext(o);
     }
+
 
     /**
      * 根据传递的 eventType 类型返回特定类型(eventType)的 被观察者
@@ -87,7 +95,6 @@ public class RxBus {
      */
     public void post(int code, Object o) {
         bus.onNext(new Message(code, o));
-
     }
 
 
@@ -114,6 +121,29 @@ public class RxBus {
                     }
                 }).cast(eventType);
     }
+
+
+    /**
+     * 根据传递的 eventType 类型返回特定类型(eventType)的 被观察者
+     */
+    public <T> Observable<T> toObservableSticky(final Class<T> eventType) {
+        synchronized (stickyEvent) {
+            Observable<T> observable = bus.ofType(eventType);
+            final Object event = stickyEvent.get(eventType);
+
+            if (event != null) {
+                return observable.mergeWith(Observable.create(new Observable.OnSubscribe<T>() {
+                    @Override
+                    public void call(Subscriber<? super T> subscriber) {
+                        subscriber.onNext(eventType.cast(event));
+                    }
+                }));
+            } else {
+                return observable;
+            }
+        }
+    }
+
 
 
     /**
@@ -217,10 +247,14 @@ public class RxBus {
      */
     public void addSubscriber(final SubscriberMethod subscriberMethod) {
         Observable observable;
-        if (subscriberMethod.code == -1) {
-            observable = toObservable(subscriberMethod.eventType);
-        } else {
-            observable = toObservable(subscriberMethod.code, subscriberMethod.eventType);
+        if(subscriberMethod.sticky){
+            observable=toObservableSticky(subscriberMethod.eventType);
+        }else{
+            if (subscriberMethod.code == -1) {
+                observable = toObservable(subscriberMethod.eventType);
+            } else {
+                observable = toObservable(subscriberMethod.code, subscriberMethod.eventType);
+            }
         }
         Subscription subscription = postToObservable(observable, subscriberMethod)
                 .subscribe(new Subscriber() {
@@ -347,6 +381,25 @@ public class RxBus {
                     iterator.remove();
                 }
             }
+        }
+    }
+
+
+    /**
+     * 移除指定eventType的Sticky事件
+     */
+    public <T> T removeStickyEvent(Class<T> eventType) {
+        synchronized (stickyEvent) {
+            return eventType.cast(stickyEvent.remove(eventType));
+        }
+    }
+
+    /**
+     * 移除所有的Sticky事件
+     */
+    public void removeAllStickyEvents() {
+        synchronized (stickyEvent) {
+            stickyEvent.clear();
         }
     }
 

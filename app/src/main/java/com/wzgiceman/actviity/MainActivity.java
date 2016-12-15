@@ -1,11 +1,13 @@
 package com.wzgiceman.actviity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
 import com.wzgiceman.event.EventChangeText;
+import com.wzgiceman.event.EventStickText;
 import com.wzgiceman.rxbus.RxBus;
 import com.wzgiceman.rxbus.Subscribe;
 import com.wzgiceman.rxbus.ThreadMode;
@@ -21,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.btn_change_text).setOnClickListener(this);
         findViewById(R.id.btn_code_simple).setOnClickListener(this);
         findViewById(R.id.btn_code_diffrent).setOnClickListener(this);
+        findViewById(R.id.btn_sticky).setOnClickListener(this);
     }
 
 
@@ -35,6 +38,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case  R.id.btn_code_diffrent:
                 RxBus.getDefault().post(0x1,new EventChangeText("code方式-我修改了-Main"));
+                break;
+            case R.id.btn_sticky:
+                RxBus.getDefault().post(new EventStickText("我是sticky消息"));
+                Intent intent=new Intent(this,Main2Activity.class);
+                startActivity(intent);
                 break;
 
         }
@@ -62,6 +70,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+
+    /*sticky消息*/
+    @Subscribe(threadMode = ThreadMode.MAIN,sticky = true)
+    public  void  event(EventStickText eventStickText){
+        tvChange.setText(eventStickText.getMsg());
+    }
+
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -74,7 +90,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onDestroy();
         /*註銷*/
         RxBus.getDefault().unRegister(this);
+        /*注销所有的sticky消息*/
+        RxBus.getDefault().removeAllStickyEvents();
     }
-
 
 }
