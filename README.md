@@ -3,7 +3,7 @@
 ##背景
 仿照EventBus3.0事件传递用法，运用Rxajva实现和EventBus3.0用法完全一样，方便从Eventbus转入到RxBus的使用成本！
 
-#### 效果
+## 效果
 ![这里写图片描述](https://github.com/wzgiceman/Rxbus/blob/master/gif/rxbus_r.gif)
 
 
