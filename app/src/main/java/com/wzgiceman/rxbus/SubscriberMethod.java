@@ -13,13 +13,15 @@ public class SubscriberMethod {
     public Class<?> eventType;
     public Object subscriber;
     public int code;
+    private boolean sticky;
 
-    public SubscriberMethod(Object subscriber, Method method, Class<?> eventType, int code,ThreadMode threadMode) {
+    public SubscriberMethod(Object subscriber, Method method, Class<?> eventType, int code,ThreadMode threadMode,boolean sticky ) {
         this.method = method;
         this.threadMode = threadMode;
         this.eventType = eventType;
         this.subscriber = subscriber;
         this.code = code;
+        this.sticky=sticky;
     }
 
 

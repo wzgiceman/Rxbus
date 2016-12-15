@@ -22,6 +22,7 @@ import rx.subjects.Subject;
 
 /**
  * RxBus
+ *
  * @author wzg 2016/9/21
  */
 public class RxBus {
@@ -121,6 +122,10 @@ public class RxBus {
      * @param subscriber 订阅者
      */
     public void register(Object subscriber) {
+          /*避免重复创建*/
+        if(eventTypesBySubscriber.containsKey(subscriber)){
+            return;
+        }
         Class<?> subClass = subscriber.getClass();
         Method[] methods = subClass.getDeclaredMethods();
         for (Method method : methods) {
@@ -136,8 +141,10 @@ public class RxBus {
                     Subscribe sub = method.getAnnotation(Subscribe.class);
                     int code = sub.code();
                     ThreadMode threadMode = sub.threadMode();
+                    boolean sticky = sub.sticky();
 
-                    SubscriberMethod subscriberMethod = new SubscriberMethod(subscriber, method, eventType, code, threadMode);
+                    SubscriberMethod subscriberMethod = new SubscriberMethod(subscriber, method, eventType, code, threadMode,
+                            sticky);
                     addSubscriberToMap(eventType, subscriberMethod);
 
                     addSubscriber(subscriberMethod);
@@ -214,17 +221,17 @@ public class RxBus {
             observable = toObservable(subscriberMethod.eventType);
         } else {
             observable = toObservable(subscriberMethod.code, subscriberMethod.eventType);
-        }    
-       Subscription subscription = postToObservable(observable, subscriberMethod)
+        }
+        Subscription subscription = postToObservable(observable, subscriberMethod)
                 .subscribe(new Subscriber() {
                     @Override
                     public void onCompleted() {
-                        
+
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e("tag","error--->"+e.toString());
+                        Log.e("tag", "error--->" + e.toString());
                     }
 
                     @Override
