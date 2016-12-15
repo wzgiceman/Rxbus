@@ -1,4 +1,4 @@
-package com.wzgiceman.rxbus;
+package com.wzgiceman.rxbuslibrary.rxbus;
 
 
 import java.lang.reflect.InvocationTargetException;

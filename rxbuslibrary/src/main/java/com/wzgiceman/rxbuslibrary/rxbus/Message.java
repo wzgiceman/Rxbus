@@ -1,4 +1,4 @@
-package com.wzgiceman.rxbus;
+package com.wzgiceman.rxbuslibrary.rxbus;
 
 /**
  * @author wzg 2016/9/21
@@ -6,10 +6,6 @@ package com.wzgiceman.rxbus;
 public class Message {
     private int code;
     private Object object;
-
-    public Message() {
-
-    }
 
     public Message(int code, Object o) {
         this.code = code;

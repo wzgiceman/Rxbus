@@ -5,9 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
 import com.wzgiceman.event.EventStickText;
-import com.wzgiceman.rxbus.RxBus;
-import com.wzgiceman.rxbus.Subscribe;
-import com.wzgiceman.rxbus.ThreadMode;
+import com.wzgiceman.rxbuslibrary.rxbus.RxBus;
+import com.wzgiceman.rxbuslibrary.rxbus.Subscribe;
+import com.wzgiceman.rxbuslibrary.rxbus.ThreadMode;
 
 import java.util.concurrent.TimeUnit;
 

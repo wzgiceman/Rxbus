@@ -8,9 +8,9 @@ import android.widget.TextView;
 
 import com.wzgiceman.event.EventChangeText;
 import com.wzgiceman.event.EventStickText;
-import com.wzgiceman.rxbus.RxBus;
-import com.wzgiceman.rxbus.Subscribe;
-import com.wzgiceman.rxbus.ThreadMode;
+import com.wzgiceman.rxbuslibrary.rxbus.RxBus;
+import com.wzgiceman.rxbuslibrary.rxbus.Subscribe;
+import com.wzgiceman.rxbuslibrary.rxbus.ThreadMode;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
     private TextView tvChange;

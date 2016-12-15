@@ -1,4 +1,4 @@
-package com.wzgiceman.rxbus;
+package com.wzgiceman.rxbuslibrary.rxbus;
 
 
 /**
