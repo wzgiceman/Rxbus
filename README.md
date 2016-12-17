@@ -7,6 +7,20 @@
 ![这里写图片描述](https://github.com/wzgiceman/Rxbus/blob/master/gif/rxbus_r.gif)
 
 
+##依赖
+
+根目录下build.gradle加入私有仓
+
+```java
+maven { url 'https://dl.bintray.com/wzgcd/maven' }
+```
+
+依赖：
+
+```java
+ compile  'com.wzgiceman:RxBus:1.0.1@aar'
+```
+
 ## 代码使用
 
 >RxBus和EventBus3.0的用法完全一样

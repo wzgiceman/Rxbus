@@ -5,16 +5,24 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.0'
         classpath 'me.tatarka:gradle-retrolambda:+'
+        classpath 'com.android.tools.build:gradle:2.2.2'
+       /* classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.1'*/
+        classpath 'com.novoda:bintray-release:+'
     }
 }
+
+
+
 
 allprojects {
     repositories {
         jcenter()
+        maven { url 'https://dl.bintray.com/wzgcd/maven' }
     }
 }
+
 
 task clean(type: Delete) {
     delete rootProject.buildDir

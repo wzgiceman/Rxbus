@@ -24,15 +24,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    productFlavors {
-        rxbus1 {
-            applicationId "com.wzgiceman.rxbus1"
-        }
-
-        rxbus1 {
-            applicationId "com.wzgiceman.rxbus2"
-        }
+    lintOptions {
+        abortOnError false
     }
+
 }
 
 dependencies {
