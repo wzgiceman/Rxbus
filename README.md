@@ -9,14 +9,6 @@
 
 ##依赖
 
-根目录下build.gradle加入私有仓
-
-```java
-maven { url 'https://dl.bintray.com/wzgcd/maven' }
-```
-
-依赖：
-
 ```java
  compile  'com.wzgiceman:RxBus:1.0.1@aar'
 ```
