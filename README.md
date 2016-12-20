@@ -10,7 +10,7 @@
 ##依赖
 
 ```java
- compile  'com.wzgiceman:RxBus:1.0.1@aar'
+ compile 'com.wzgiceman:RxBus:1.0.2'
 ```
 
 ## 代码使用
