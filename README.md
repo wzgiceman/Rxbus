@@ -58,7 +58,7 @@
         tvChange.setText(eventStickText.getMsg());
     }
 ```
-**注意：**sticky消息在程序销毁的时候要销毁里面的消息
+** 注意： **sticky消息在程序销毁的时候要销毁里面的消息
 
 ```java
 
