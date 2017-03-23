@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.btn_sticky:
                 RxBus.getDefault().post(new EventStickText("我是sticky消息"));
-                RxBus.getDefault().post(new EventChangeText("我修改了-Main"));
                 Intent intent = new Intent(this, Main2Activity.class);
                 startActivity(intent);
                 break;
