@@ -27,11 +27,10 @@ public class Main2Activity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void event(EventStickText eventStickText) {
-        Observable.timer(2, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(aLong -> {
+        Observable.timer(1, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(aLong -> {
             textView.setText(eventStickText.getMsg());
         });
     }
-
 
     @Override
     protected void onStart() {
