@@ -1,13 +1,13 @@
-#RxBus
+# RxBus
 
-##背景
+## 背景
 仿照EventBus3.0事件传递用法，运用Rxajva实现和EventBus3.0用法完全一样，方便从Eventbus转入到RxBus的使用成本！
 
 ## 效果
 ![这里写图片描述](https://github.com/wzgiceman/Rxbus/blob/master/gif/rxbus_r.gif)
 
 
-##依赖
+## 依赖
 
 
 ```java
@@ -19,7 +19,7 @@
 >RxBus和EventBus3.0的用法完全一样
 
 
-###注册-注销-接受事件
+### 注册-注销-接受事件
 ```java
     /*接受事件*/
     @Subscribe(threadMode= ThreadMode.MAIN)
@@ -42,14 +42,14 @@
     }
 ```
 
-###发送消息
+### 发送消息
 ```java
 
     RxBus.getDefault().post(new EventChangeText("我修改了-Main"));
 
 ```
 
-###sticky消息的用法
+### sticky消息的用法
 
 ```java
  /*sticky消息*/
@@ -58,7 +58,9 @@
         tvChange.setText(eventStickText.getMsg());
     }
 ```
-**注意：**sticky消息在程序销毁的时候要销毁里面的消息
+#### 注意
+
+sticky消息在程序销毁的时候要销毁里面的消息
 
 ```java
 
