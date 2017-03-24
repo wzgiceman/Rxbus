@@ -32,5 +32,6 @@ android {
 
 dependencies {
 //    compile 'com.wzgiceman:RxBus:1.0.2'
+//    compile 'com.github.wzgiceman:Rxbus:v1.0.1'
     compile project(':rxbuslibrary')
 }
