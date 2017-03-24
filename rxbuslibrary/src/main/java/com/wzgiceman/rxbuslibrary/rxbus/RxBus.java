@@ -1,8 +1,6 @@
 package com.wzgiceman.rxbuslibrary.rxbus;
 
 
-import android.util.Log;
-
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,9 +13,10 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
-import rx.subjects.BehaviorSubject;
+import rx.subjects.PublishSubject;
 import rx.subjects.SerializedSubject;
 import rx.subjects.Subject;
 
@@ -43,7 +42,7 @@ public class RxBus {
     private final Subject bus;
 
     public RxBus() {
-        bus = new SerializedSubject<>(BehaviorSubject.create());
+        bus = new SerializedSubject<>(PublishSubject.create());
     }
 
     // 单例RxBus
@@ -243,24 +242,14 @@ public class RxBus {
         } else {
             observable = toObservable(subscriberMethod.code, subscriberMethod.eventType);
         }
-        postToObservable(observable, subscriberMethod)
-                .subscribe(new Subscriber() {
+        Subscription subscription=  postToObservable(observable, subscriberMethod)
+                .subscribe(new Action1() {
                     @Override
-                    public void onCompleted() {
-                        addSubscriptionToMap(subscriberMethod.eventType, this);
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        Log.e("tag", "error--->" + e.toString());
-                    }
-
-                    @Override
-                    public void onNext(Object o) {
+                    public void call(Object o) {
                         callEvent(subscriberMethod.code, o);
                     }
                 });
-
+        addSubscriptionToMap(subscriberMethod.subscriber.getClass(), subscription);
     }
 
 
@@ -325,7 +314,7 @@ public class RxBus {
         List<Class> subscribedTypes = eventTypesBySubscriber.get(subscriber);
         if (subscribedTypes != null) {
             for (Class<?> eventType : subscribedTypes) {
-                unSubscribeByEventType(eventType);
+                unSubscribeByEventType(subscriber.getClass());
                 unSubscribeMethodByEventType(subscriber, eventType);
             }
             eventTypesBySubscriber.remove(subscriber);

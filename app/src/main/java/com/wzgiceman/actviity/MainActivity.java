@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /*code 不同事件接受處理*/
     @Subscribe(code = 0x1, threadMode = ThreadMode.MAIN)
     public void eventCode(EventChangeText changeText) {
+        Log.e("tag","--->event");
         tvChange.setText(changeText.getChangeText());
     }
 

@@ -10,9 +10,25 @@
 ## 依赖
 
 
+Add it in your root build.gradle at the end of repositories:
+
+
 ```java
- compile 'com.wzgiceman:RxBus:1.0.2'
+allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
 ```
+Add the dependency
+
+```java
+
+```
+
+
+
 
 ## 代码使用
 
