@@ -169,7 +169,7 @@ public class RxBus {
         }
         /*没有接受对象，抛出异常*/
         if(!recive){
-            throw new RuntimeException("no recive targert");
+            throw new RuntimeException("RxBus error:no recive targert event");
         }
     }
 
@@ -214,14 +214,14 @@ public class RxBus {
     /**
      * 将订阅事件以event类型为key保存到map,用于取消订阅时用
      *
-     * @param eventType    event类型
+     * @param subscriber   subscriber对象类
      * @param subscription 订阅事件
      */
-    private void addSubscriptionToMap(Class eventType, Subscription subscription) {
-        List<Subscription> subscriptions = subscriptionsByEventType.get(eventType);
+    private void addSubscriptionToMap(Class subscriber, Subscription subscription) {
+        List<Subscription> subscriptions = subscriptionsByEventType.get(subscriber);
         if (subscriptions == null) {
             subscriptions = new ArrayList<>();
-            subscriptionsByEventType.put(eventType, subscriptions);
+            subscriptionsByEventType.put(subscriber, subscriptions);
         }
 
         if (!subscriptions.contains(subscription)) {
@@ -293,7 +293,6 @@ public class RxBus {
         List<SubscriberMethod> methods = subscriberMethodByEventType.get(eventClass);
         if (methods != null && methods.size() > 0) {
             for (SubscriberMethod subscriberMethod : methods) {
-
                 Subscribe sub = subscriberMethod.method.getAnnotation(Subscribe.class);
                 int c = sub.code();
                 if (c == code) {
@@ -314,7 +313,7 @@ public class RxBus {
         List<Class> subscribedTypes = eventTypesBySubscriber.get(subscriber);
         if (subscribedTypes != null) {
             for (Class<?> eventType : subscribedTypes) {
-                unSubscribeByEventType(subscriber.getClass());
+                unSubscribeBySubscriber(subscriber.getClass());
                 unSubscribeMethodByEventType(subscriber, eventType);
             }
             eventTypesBySubscriber.remove(subscriber);
@@ -325,10 +324,10 @@ public class RxBus {
     /**
      * subscriptions unsubscribe
      *
-     * @param eventType
+     * @param subscriber
      */
-    private void unSubscribeByEventType(Class eventType) {
-        List<Subscription> subscriptions = subscriptionsByEventType.get(eventType);
+    private void unSubscribeBySubscriber(Class subscriber) {
+        List<Subscription> subscriptions = subscriptionsByEventType.get(subscriber);
         if (subscriptions != null) {
             Iterator<Subscription> iterator = subscriptions.iterator();
             while (iterator.hasNext()) {
@@ -349,7 +348,7 @@ public class RxBus {
      */
     private void unSubscribeMethodByEventType(Object subscriber, Class eventType) {
         List<SubscriberMethod> subscriberMethods = subscriberMethodByEventType.get(eventType);
-        if (subscriberMethods != null) {
+        if (subscriberMethods != null&&subscriberMethods.size()>0) {
             Iterator<SubscriberMethod> iterator = subscriberMethods.iterator();
             while (iterator.hasNext()) {
                 SubscriberMethod subscriberMethod = iterator.next();
