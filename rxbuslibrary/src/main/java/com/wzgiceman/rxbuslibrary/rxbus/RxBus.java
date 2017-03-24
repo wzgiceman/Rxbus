@@ -189,6 +189,7 @@ public class RxBus {
             for (SubscriberMethod subscriberMethod1 : subscriberMethods) {
                 if(subscriberMethod1.code==subscriberMethod.code){
                     resulte=false;
+                    break;
                 }
             }
         }
