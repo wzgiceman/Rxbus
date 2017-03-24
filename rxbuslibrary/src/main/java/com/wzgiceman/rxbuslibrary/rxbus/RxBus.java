@@ -142,10 +142,10 @@ public class RxBus {
         }
         Class<?> subClass = subscriber.getClass();
         Method[] methods = subClass.getDeclaredMethods();
-        boolean recive=false;
+        boolean recive = false;
         for (Method method : methods) {
             if (method.isAnnotationPresent(Subscribe.class)) {
-                recive=true;
+                recive = true;
                 //获得参数类型
                 Class[] parameterType = method.getParameterTypes();
                 //参数不为空 且参数个数为1
@@ -161,16 +161,38 @@ public class RxBus {
 
                     SubscriberMethod subscriberMethod = new SubscriberMethod(subscriber, method, eventType, code, threadMode,
                             sticky);
-                    addSubscriberToMap(eventType, subscriberMethod);
 
-                    addSubscriber(subscriberMethod);
+                    if (isAdd(eventType, subscriberMethod)) {
+                        addSubscriber(subscriberMethod);
+                    }
+                    addSubscriberToMap(eventType, subscriberMethod);
                 }
             }
         }
         /*没有接受对象，抛出异常*/
-        if(!recive){
+        if (!recive) {
             throw new RuntimeException("RxBus error:no recive targert event");
         }
+    }
+
+
+    /**
+     * 检查是否已经添加过sub事件
+     * @param eventType
+     * @param subscriberMethod
+     * @return
+     */
+    private boolean isAdd(Class eventType,SubscriberMethod subscriberMethod){
+        boolean resulte=true;
+        List<SubscriberMethod> subscriberMethods = subscriberMethodByEventType.get(eventType);
+        if(subscriberMethods!=null&&subscriberMethods.size()>0){
+            for (SubscriberMethod subscriberMethod1 : subscriberMethods) {
+                if(subscriberMethod1.code==subscriberMethod.code){
+                    resulte=false;
+                }
+            }
+        }
+        return resulte;
     }
 
 
@@ -242,7 +264,7 @@ public class RxBus {
         } else {
             observable = toObservable(subscriberMethod.code, subscriberMethod.eventType);
         }
-        Subscription subscription=  postToObservable(observable, subscriberMethod)
+        Subscription subscription = postToObservable(observable, subscriberMethod)
                 .subscribe(new Action1() {
                     @Override
                     public void call(Object o) {
@@ -348,7 +370,7 @@ public class RxBus {
      */
     private void unSubscribeMethodByEventType(Object subscriber, Class eventType) {
         List<SubscriberMethod> subscriberMethods = subscriberMethodByEventType.get(eventType);
-        if (subscriberMethods != null&&subscriberMethods.size()>0) {
+        if (subscriberMethods != null && subscriberMethods.size() > 0) {
             Iterator<SubscriberMethod> iterator = subscriberMethods.iterator();
             while (iterator.hasNext()) {
                 SubscriberMethod subscriberMethod = iterator.next();
