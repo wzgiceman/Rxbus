@@ -1,6 +1,7 @@
 package com.wzgiceman.rxbuslibrary.rxbus;
 
 /**
+ * 消息类
  * @author wzg 2016/9/21
  */
 public class Message {

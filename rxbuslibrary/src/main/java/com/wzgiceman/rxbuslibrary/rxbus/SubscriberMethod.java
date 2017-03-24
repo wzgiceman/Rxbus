@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
+ * 数据类
  * @author wzg 2016/9/21
  */
 public class SubscriberMethod {

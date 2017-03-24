@@ -8,6 +8,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * 注解类
  * @author wzg 2016/9/21
  */
 @Documented

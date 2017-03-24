@@ -21,7 +21,7 @@ import rx.subjects.SerializedSubject;
 import rx.subjects.Subject;
 
 /**
- * RxBus
+ * RxBus核心处理类
  *
  * @author wzg 2016/9/21
  */
