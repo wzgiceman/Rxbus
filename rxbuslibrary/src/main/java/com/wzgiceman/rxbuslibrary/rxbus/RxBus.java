@@ -163,9 +163,9 @@ public class RxBus {
                             sticky);
 
                     if (isAdd(eventType, subscriberMethod)) {
-                        addSubscriber(subscriberMethod);
+                        addSubscriberToMap(eventType, subscriberMethod); 
                     }
-                    addSubscriberToMap(eventType, subscriberMethod);
+                    addSubscriber(subscriberMethod);
                 }
             }
         }
