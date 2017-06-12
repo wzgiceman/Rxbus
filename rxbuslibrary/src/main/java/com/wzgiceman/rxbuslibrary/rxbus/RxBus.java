@@ -1,6 +1,8 @@
 package com.wzgiceman.rxbuslibrary.rxbus;
 
 
+import android.util.Log;
+
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +15,6 @@ import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 import rx.subjects.PublishSubject;
@@ -21,7 +22,7 @@ import rx.subjects.SerializedSubject;
 import rx.subjects.Subject;
 
 /**
- * RxBus核心处理类
+ * RxBus
  *
  * @author wzg 2016/9/21
  */
@@ -37,10 +38,12 @@ public class RxBus {
     private Map<Class, List<SubscriberMethod>> subscriberMethodByEventType = new HashMap<>();
 
     /*stick数据*/
-    private final Map<Class<?>, Object> stickyEvent = new ConcurrentHashMap<>();
+    private final Map<Class<?>, Object> stickyEvent =new ConcurrentHashMap<>();
+
     // 主题
     private final Subject bus;
 
+    // PublishSubject只会把在订阅发生的时间点之后来自原始Observable的数据发射给观察者
     public RxBus() {
         bus = new SerializedSubject<>(PublishSubject.create());
     }
@@ -69,7 +72,19 @@ public class RxBus {
         synchronized (stickyEvent) {
             stickyEvent.put(o.getClass(), o);
         }
-        bus.onNext(new Message(-1, o));
+        bus.onNext(o);
+    }
+
+
+    /**
+     * 根据传递的 eventType 类型返回特定类型(eventType)的 被观察者
+     *
+     * @param eventType 事件类型
+     * @param <T>
+     * @return
+     */
+    public <T> Observable<T> toObservable(Class<T> eventType) {
+        return bus.ofType(eventType);
     }
 
     /**
@@ -130,6 +145,7 @@ public class RxBus {
     }
 
 
+
     /**
      * 注册
      *
@@ -137,15 +153,13 @@ public class RxBus {
      */
     public void register(Object subscriber) {
           /*避免重复创建*/
-        if (eventTypesBySubscriber.containsKey(subscriber)) {
+        if(eventTypesBySubscriber.containsKey(subscriber)){
             return;
         }
         Class<?> subClass = subscriber.getClass();
         Method[] methods = subClass.getDeclaredMethods();
-        boolean recive = false;
         for (Method method : methods) {
             if (method.isAnnotationPresent(Subscribe.class)) {
-                recive = true;
                 //获得参数类型
                 Class[] parameterType = method.getParameterTypes();
                 //参数不为空 且参数个数为1
@@ -163,15 +177,11 @@ public class RxBus {
                             sticky);
 
                     if (isAdd(eventType, subscriberMethod)) {
+                        addSubscriberToMap(eventType, subscriberMethod);
                         addSubscriber(subscriberMethod);
                     }
-                    addSubscriberToMap(eventType, subscriberMethod);
                 }
             }
-        }
-        /*没有接受对象，抛出异常*/
-        if (!recive) {
-            throw new RuntimeException("RxBus error:no recive targert event");
         }
     }
 
@@ -189,7 +199,6 @@ public class RxBus {
             for (SubscriberMethod subscriberMethod1 : subscriberMethods) {
                 if(subscriberMethod1.code==subscriberMethod.code){
                     resulte=false;
-                    break;
                 }
             }
         }
@@ -237,14 +246,14 @@ public class RxBus {
     /**
      * 将订阅事件以event类型为key保存到map,用于取消订阅时用
      *
-     * @param subscriber   subscriber对象类
+     * @param eventType    event类型
      * @param subscription 订阅事件
      */
-    private void addSubscriptionToMap(Class subscriber, Subscription subscription) {
-        List<Subscription> subscriptions = subscriptionsByEventType.get(subscriber);
+    private void addSubscriptionToMap(Class eventType, Subscription subscription) {
+        List<Subscription> subscriptions = subscriptionsByEventType.get(eventType);
         if (subscriptions == null) {
             subscriptions = new ArrayList<>();
-            subscriptionsByEventType.put(subscriber, subscriptions);
+            subscriptionsByEventType.put(eventType, subscriptions);
         }
 
         if (!subscriptions.contains(subscription)) {
@@ -260,19 +269,33 @@ public class RxBus {
      */
     public void addSubscriber(final SubscriberMethod subscriberMethod) {
         Observable observable;
-        if (subscriberMethod.sticky) {
-            observable = toObservableSticky(subscriberMethod.eventType);
-        } else {
-            observable = toObservable(subscriberMethod.code, subscriberMethod.eventType);
+        if(subscriberMethod.sticky){
+            observable=toObservableSticky(subscriberMethod.eventType);
+        }else{
+            if (subscriberMethod.code == -1) {
+                observable = toObservable(subscriberMethod.eventType);
+            } else {
+                observable = toObservable(subscriberMethod.code, subscriberMethod.eventType);
+            }
         }
         Subscription subscription = postToObservable(observable, subscriberMethod)
-                .subscribe(new Action1() {
+                .subscribe(new Subscriber() {
                     @Override
-                    public void call(Object o) {
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("tag", "error--->" + e.toString());
+                    }
+
+                    @Override
+                    public void onNext(Object o) {
                         callEvent(subscriberMethod.code, o);
                     }
                 });
-        addSubscriptionToMap(subscriberMethod.subscriber.getClass(), subscription);
+        addSubscriptionToMap(subscriberMethod.eventType, subscription);
     }
 
 
@@ -316,6 +339,7 @@ public class RxBus {
         List<SubscriberMethod> methods = subscriberMethodByEventType.get(eventClass);
         if (methods != null && methods.size() > 0) {
             for (SubscriberMethod subscriberMethod : methods) {
+
                 Subscribe sub = subscriberMethod.method.getAnnotation(Subscribe.class);
                 int c = sub.code();
                 if (c == code) {
@@ -336,7 +360,7 @@ public class RxBus {
         List<Class> subscribedTypes = eventTypesBySubscriber.get(subscriber);
         if (subscribedTypes != null) {
             for (Class<?> eventType : subscribedTypes) {
-                unSubscribeBySubscriber(subscriber.getClass());
+                unSubscribeByEventType(eventType);
                 unSubscribeMethodByEventType(subscriber, eventType);
             }
             eventTypesBySubscriber.remove(subscriber);
@@ -347,10 +371,10 @@ public class RxBus {
     /**
      * subscriptions unsubscribe
      *
-     * @param subscriber
+     * @param eventType
      */
-    private void unSubscribeBySubscriber(Class subscriber) {
-        List<Subscription> subscriptions = subscriptionsByEventType.get(subscriber);
+    private void unSubscribeByEventType(Class eventType) {
+        List<Subscription> subscriptions = subscriptionsByEventType.get(eventType);
         if (subscriptions != null) {
             Iterator<Subscription> iterator = subscriptions.iterator();
             while (iterator.hasNext()) {
@@ -371,7 +395,7 @@ public class RxBus {
      */
     private void unSubscribeMethodByEventType(Object subscriber, Class eventType) {
         List<SubscriberMethod> subscriberMethods = subscriberMethodByEventType.get(eventType);
-        if (subscriberMethods != null && subscriberMethods.size() > 0) {
+        if (subscriberMethods != null) {
             Iterator<SubscriberMethod> iterator = subscriberMethods.iterator();
             while (iterator.hasNext()) {
                 SubscriberMethod subscriberMethod = iterator.next();

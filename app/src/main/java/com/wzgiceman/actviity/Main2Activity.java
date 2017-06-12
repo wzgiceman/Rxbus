@@ -2,6 +2,7 @@ package com.wzgiceman.actviity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.wzgiceman.event.EventStickText;
@@ -27,6 +28,7 @@ public class Main2Activity extends AppCompatActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void event(EventStickText eventStickText) {
+        Log.e("tag","---->"+eventStickText.getMsg());
         Observable.timer(1, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread()).subscribe(aLong -> {
             textView.setText(eventStickText.getMsg());
         });
