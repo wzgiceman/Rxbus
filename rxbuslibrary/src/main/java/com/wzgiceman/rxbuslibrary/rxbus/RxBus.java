@@ -197,7 +197,10 @@ public class RxBus {
         List<SubscriberMethod> subscriberMethods = subscriberMethodByEventType.get(eventType);
         if(subscriberMethods!=null&&subscriberMethods.size()>0){
             for (SubscriberMethod subscriberMethod1 : subscriberMethods) {
-                if(subscriberMethod1.code==subscriberMethod.code){
+                if(subscriberMethod1.code==subscriberMethod.code&&subscriberMethod.subscriber==subscriberMethod1.subscriber){
+                    resulte=false;
+                }
+                if(subscriberMethod1.eventType==subscriberMethod.eventType&&subscriberMethod.subscriber==subscriberMethod1.subscriber){
                     resulte=false;
                 }
             }
